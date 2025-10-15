@@ -24,20 +24,19 @@ public class QuizService {
     QuestionDao questionDao;
 
     public ResponseEntity<String> createQuiz(String category, int numQ, String title) {
+        List<Question> questions = questionDao.findRandomQuestionsByCategory(category, numQ);
 
-        List<Question> questions = questionDao.findRandomQuestionsByCategory(category,numQ);
-        if(questions.size()<numQ){
-            return ResponseEntity.ok("Not enough Questions in the Database");
-        }
-        else{
-            Quiz quiz = new Quiz();
-            quiz.setTitle(title);
-            quiz.setQuestions(questions);
-            quizDao.save(quiz);
-            return ResponseEntity.ok("Quiz Created Successfully");
+        if (questions.size() < numQ) {
+            return ResponseEntity.ok("Not enough questions in the database for category: " + category);
         }
 
+        Quiz quiz = new Quiz();
+        quiz.setTitle(title);
+        quiz.setQuestions(questions);
+        quizDao.save(quiz);
 
+        // ✅ Return the newly created quiz ID in response
+        return ResponseEntity.ok("Quiz created successfully with id: " + quiz.getId());
     }
 
     public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(Integer id) {
