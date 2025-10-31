@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/question")
@@ -28,9 +30,16 @@ public class QuestionController {
     }
 
     @PostMapping("/addQuestion")
-    public ResponseEntity<String> addQuestion(@RequestBody Question question){
-        return questionService.addQuestion(question);
+    public ResponseEntity<Map<String, Object>> addQuestion(@RequestBody Question question) {
+        questionService.addQuestion(question); // assuming it saves successfully
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Question Added Successfully");
+        response.put("status", "success");
+
+        return ResponseEntity.ok(response);
     }
+
 
     @DeleteMapping("/deleteQuestion/{id}")
     public ResponseEntity<String> deleteQuestion(@PathVariable Integer id){
